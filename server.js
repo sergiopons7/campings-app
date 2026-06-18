@@ -62,13 +62,14 @@ app.get('/nuevo', (req, res) => {
 
 // ✅ GUARDAR CAMPING
 app.post('/nuevo', (req, res) => {
-  const { nombre, ubicacion, tipo, imagen, descripcion } = req.body;
+  const { nombre, ubicacion, tipo, imagen, descripcion, provincia } = req.body;
 
   const nuevoCamping = {
     id: Date.now(),
     nombre,
     ubicacion,
     tipo,
+    provincia, // ✅ nuevo campo
     imagen,
     descripcion
   };
