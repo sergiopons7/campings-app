@@ -4,6 +4,8 @@ const app = express();
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+foro = parsed.foro || [];
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
@@ -42,6 +44,7 @@ function guardarDatos() {
   fs.writeFileSync(dataFile, JSON.stringify({
     noticias: noticias,
     campings: campings
+    foro: foro
   }, null, 2));
 }
 
@@ -109,6 +112,21 @@ app.get('/noticias', (req, res) => {
 // ✅ FORM NOTICIA
 app.get('/nueva-noticia', (req, res) => {
   res.render('nueva-noticia');
+});
+app.post('/foro', (req, res) => {
+  const { titulo, contenido } = req.body;
+
+  const nuevoMensaje = {
+    id: Date.now(),
+    titulo,
+    contenido,
+    fecha: new Date().toLocaleString()
+  };
+
+  foro.push(nuevoMensaje);   // ✅ aquí lo añades al array
+  guardarDatos();            // ✅ aquí lo guardas en JSON
+
+  res.redirect('/foro');
 });
 
 // ✅ GUARDAR NOTICIA
