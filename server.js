@@ -8,24 +8,41 @@ const fs = require('fs');
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ DATOS
+// ✅ FICHERO DE DATOS
+const dataFile = 'noticias.json';
+
+// ✅ VARIABLES
 let campings = [];
 let noticias = [];
 
-// ✅ CARGAR DESDE JSON
-if (fs.existsSync('noticias.json')) {
-  try {
-    const data = fs.readFileSync('noticias.json', 'utf-8');
-    const parsed = JSON.parse(data || '{}');
+// ✅ CREAR JSON SI NO EXISTE
+if (!fs.existsSync(dataFile)) {
+  fs.writeFileSync(dataFile, JSON.stringify({
+    noticias: [],
+    campings: []
+  }, null, 2));
+}
 
-    noticias = parsed.noticias || [];
-    campings = parsed.campings || [];
+// ✅ LEER JSON
+try {
+  const data = fs.readFileSync(dataFile, 'utf-8');
+  const parsed = JSON.parse(data);
 
-  } catch (error) {
-    console.log("Error leyendo JSON");
-    noticias = [];
-    campings = [];
-  }
+  noticias = parsed.noticias || [];
+  campings = parsed.campings || [];
+
+} catch (error) {
+  console.log("Error leyendo JSON");
+  noticias = [];
+  campings = [];
+}
+
+// ✅ GUARDAR TODO
+function guardarDatos() {
+  fs.writeFileSync(dataFile, JSON.stringify({
+    noticias: noticias,
+    campings: campings
+  }, null, 2));
 }
 
 // ✅ HOME
@@ -38,16 +55,17 @@ app.get('/listado', (req, res) => {
   res.render('listado', { campings });
 });
 
-// ✅ NUEVO CAMPING
+// ✅ FORM NUEVO CAMPING
 app.get('/nuevo', (req, res) => {
   res.render('nuevo');
 });
 
+// ✅ GUARDAR CAMPING
 app.post('/nuevo', (req, res) => {
   const { nombre, ubicacion, tipo, imagen, descripcion } = req.body;
 
   const nuevoCamping = {
-    id: Date.now(), // ✅ mejor que length+1
+    id: Date.now(),
     nombre,
     ubicacion,
     tipo,
@@ -56,12 +74,7 @@ app.post('/nuevo', (req, res) => {
   };
 
   campings.push(nuevoCamping);
-
-  // ✅ GUARDAR TODO
-  fs.writeFileSync('noticias.json', JSON.stringify({
-    noticias: noticias,
-    campings: campings
-  }, null, 2));
+  guardarDatos();
 
   res.redirect('/listado');
 });
@@ -71,16 +84,12 @@ app.post('/borrar-camping/:id', (req, res) => {
   const id = parseInt(req.params.id);
 
   campings = campings.filter(c => c.id !== id);
-
-  fs.writeFileSync('noticias.json', JSON.stringify({
-    noticias: noticias,
-    campings: campings
-  }, null, 2));
+  guardarDatos();
 
   res.redirect('/listado');
 });
 
-// ✅ DETALLE
+// ✅ DETALLE CAMPING
 app.get('/campings/:id', (req, res) => {
   const camping = campings.find(c => c.id == req.params.id);
   res.render('detalle', { camping });
@@ -96,7 +105,7 @@ app.get('/noticias', (req, res) => {
   res.render('noticias', { noticias });
 });
 
-// ✅ FORMULARIO NOTICIA
+// ✅ FORM NOTICIA
 app.get('/nueva-noticia', (req, res) => {
   res.render('nueva-noticia');
 });
@@ -146,16 +155,11 @@ app.post('/nueva-noticia', async (req, res) => {
     });
   }
 
-  // ✅ IMPORTANTE: guardar todo
-  fs.writeFileSync('noticias.json', JSON.stringify({
-    noticias: noticias,
-    campings: campings
-  }, null, 2));
-
+  guardarDatos();
   res.redirect('/noticias');
 });
 
-// ✅ SERVIDOR
+// ✅ SERVIDOR (IMPORTANTE PARA RENDER)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
