@@ -112,15 +112,6 @@
             background: #219150;
         }
 
-        .delete-btn {
-            background: red;
-            color: white;
-            border: none;
-            padding: 8px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
     </style>
 </head>
 
@@ -173,9 +164,7 @@
 
                 <a href="/campings/<%= camping.id %>" class="btn">Ver</a>
 
-                <form action="/borrar-camping/<%= camping.id %>" method="POST">
-                    <button class="delete-btn">❌</button>
-                </form>
+                
 
             </div>
 
