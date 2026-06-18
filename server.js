@@ -4,66 +4,74 @@ const app = express();
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
-foro = parsed.foro || [];
-
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ FICHERO DE DATOS
+// ✅ FICHERO
 const dataFile = 'noticias.json';
 
 // ✅ VARIABLES
 let campings = [];
 let noticias = [];
+let foro = [];
+let users = [];
+let usuarioActual = null;
 
 // ✅ CREAR JSON SI NO EXISTE
 if (!fs.existsSync(dataFile)) {
   fs.writeFileSync(dataFile, JSON.stringify({
     noticias: [],
-    campings: []
+    campings: [],
+    foro: [],
+    users: []
   }, null, 2));
 }
 
-// ✅ LEER JSON
+// ✅ LEER DATOS
 try {
   const data = fs.readFileSync(dataFile, 'utf-8');
   const parsed = JSON.parse(data);
 
   noticias = parsed.noticias || [];
   campings = parsed.campings || [];
+  foro = parsed.foro || [];
+  users = parsed.users || [];
 
 } catch (error) {
   console.log("Error leyendo JSON");
-  noticias = [];
-  campings = [];
 }
 
-// ✅ GUARDAR TODO
+// ✅ GUARDAR
 function guardarDatos() {
   fs.writeFileSync(dataFile, JSON.stringify({
-    noticias: noticias,
-    campings: campings
-    foro: foro
+    noticias,
+    campings,
+    foro,
+    users
   }, null, 2));
 }
 
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
 // ✅ HOME
 app.get('/', (req, res) => {
-  res.render('index', { campings });
+  res.render('index', { campings, usuarioActual });
 });
 
 // ✅ LISTADO
 app.get('/listado', (req, res) => {
-  res.render('listado', { campings });
+  res.render('listado', { campings, usuarioActual });
 });
 
-// ✅ FORM NUEVO CAMPING
+// ✅ NUEVO CAMPING
 app.get('/nuevo', (req, res) => {
-  res.render('nuevo');
+  res.render('nuevo', { usuarioActual });
 });
 
-// ✅ GUARDAR CAMPING
 app.post('/nuevo', (req, res) => {
   const { nombre, ubicacion, tipo, imagen, descripcion, provincia } = req.body;
 
@@ -72,7 +80,7 @@ app.post('/nuevo', (req, res) => {
     nombre,
     ubicacion,
     tipo,
-    provincia, // ✅ nuevo campo
+    provincia,
     imagen,
     descripcion
   };
@@ -93,57 +101,29 @@ app.post('/borrar-camping/:id', (req, res) => {
   res.redirect('/listado');
 });
 
-// ✅ DETALLE CAMPING
+// ✅ DETALLE
 app.get('/campings/:id', (req, res) => {
   const camping = campings.find(c => c.id == req.params.id);
-  res.render('detalle', { camping });
-});
-
-// ✅ FORO
-app.get('/foro', (req, res) => {
-  res.render('foro');
+  res.render('detalle', { camping, usuarioActual });
 });
 
 // ✅ NOTICIAS
 app.get('/noticias', (req, res) => {
-  res.render('noticias', { noticias });
+  res.render('noticias', { noticias, usuarioActual });
 });
 
-// ✅ FORM NOTICIA
 app.get('/nueva-noticia', (req, res) => {
-  res.render('nueva-noticia');
-});
-app.post('/foro', (req, res) => {
-  const { titulo, contenido } = req.body;
-
-  const nuevoMensaje = {
-    id: Date.now(),
-    titulo,
-    contenido,
-    fecha: new Date().toLocaleString()
-  };
-
-  foro.push(nuevoMensaje);   // ✅ aquí lo añades al array
-  guardarDatos();            // ✅ aquí lo guardas en JSON
-
-  res.redirect('/foro');
+  res.render('nueva-noticia', { usuarioActual });
 });
 
-// ✅ GUARDAR NOTICIA
 app.post('/nueva-noticia', async (req, res) => {
   const { link, titulo } = req.body;
 
   try {
     const response = await axios.get(link);
-    const html = response.data;
-    const $ = cheerio.load(html);
+    const $ = cheerio.load(response.data);
 
     let tituloAuto = $('title').text();
-
-    if (tituloAuto.includes('|')) {
-      tituloAuto = tituloAuto.split('|')[0];
-    }
-
     let descripcion =
       $('meta[name="description"]').attr('content') ||
       "Haz clic para ver la noticia";
@@ -152,21 +132,17 @@ app.post('/nueva-noticia', async (req, res) => {
       $('meta[property="og:image"]').attr('content') ||
       "https://picsum.photos/400/200";
 
-    const nuevaNoticia = {
-      titulo: titulo && titulo.trim() !== "" ? titulo : tituloAuto,
+    noticias.push({
+      titulo: titulo || tituloAuto,
       descripcion,
       imagen,
       link,
       fecha: new Date().toLocaleDateString()
-    };
-
-    noticias.push(nuevaNoticia);
+    });
 
   } catch (error) {
-    console.log(error);
-
     noticias.push({
-      titulo: titulo || "No se pudo cargar",
+      titulo: titulo || "Error",
       descripcion: "Haz clic para ver la noticia",
       imagen: "https://picsum.photos/400/200",
       link,
@@ -178,9 +154,65 @@ app.post('/nueva-noticia', async (req, res) => {
   res.redirect('/noticias');
 });
 
-// ✅ SERVIDOR (IMPORTANTE PARA RENDER)
+// ✅ FORO
+app.get('/foro', (req, res) => {
+  res.render('foro', { foro, usuarioActual });
+});
+
+app.post('/foro', (req, res) => {
+  const { titulo, contenido } = req.body;
+
+  const nuevoMensaje = {
+    id: Date.now(),
+    titulo,
+    contenido,
+    usuario: usuarioActual || "Anónimo",
+    fecha: new Date().toLocaleString()
+  };
+
+  foro.push(nuevoMensaje);
+  guardarDatos();
+
+  res.redirect('/foro');
+});
+
+// ✅ LOGIN
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/registro', (req, res) => {
+  const { usuario, password } = req.body;
+
+  users.push({ usuario, password });
+  guardarDatos();
+
+  res.redirect('/login');
+});
+
+app.post('/login', (req, res) => {
+  const { usuario, password } = req.body;
+
+  const user = users.find(
+    u => u.usuario === usuario && u.password === password
+  );
+
+  if (user) {
+    usuarioActual = usuario;
+    res.redirect('/');
+  } else {
+    res.send("❌ Usuario incorrecto");
+  }
+});
+
+app.get('/logout', (req, res) => {
+  usuarioActual = null;
+  res.redirect('/');
+});
+
+// ✅ SERVER
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor en http://localhost:${PORT}`);
+  console.log("Servidor funcionando");
 });

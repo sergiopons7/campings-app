@@ -140,6 +140,19 @@
     <a href="/listado">📋 Listado</a>
     <a href="/mapa">🗺 Mapa</a>
     <a href="/noticias">📰 Noticias</a>
+    
+    <div style="margin-top: 30px; border-top: 1px solid #555; padding-top: 15px;">
+        
+    <% if (usuarioActual) { %>
+        <p style="font-size: 14px;">
+            👤 <strong><%= usuarioActual %></strong>
+        </p>
+        <a href="/logout">🚪 Salir</a>
+    <% } else { %>
+        <a href="/login">🔑 Login</a>
+    <% } %>
+
+</div>
 </div>
 
 <div class="content">

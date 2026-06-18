@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 40px;
+            background: #f5f7fa;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>🔑 Login</h2>
+
+    <!-- ✅ LOGIN -->
+    <form action="/login" method="POST">
+        <input name="usuario" placeholder="Usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button>Entrar</button>
+    </form>
+
+    <hr>
+
+    <h2>🆕 Crear cuenta</h2>
+
+    <!-- ✅ REGISTRO -->
+    <form action="/registro" method="POST">
+        <input name="usuario" placeholder="Usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button>Registrarse</button>
+    </form>
+
+</div>
+
+</body>
+</html>
