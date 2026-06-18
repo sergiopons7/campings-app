@@ -33,6 +33,24 @@
       "provincia": "Lleida",
       "imagen": "https://th.bing.com/th/id/OIP.BhTYIzTzDBvZgguV4heiCwHaE8?w=266&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
       "descripcion": ""
+    },
+    {
+      "id": 1781772832620,
+      "nombre": "Delfín Verde Pals",
+      "ubicacion": "Pals",
+      "tipo": "Playa",
+      "provincia": "Girona",
+      "imagen": "https://www.bing.com/th/id/OIP.OfbaTgAUa_ULEXDRplhssgHaGe?w=202&h=200&c=8&rs=1&o=6&dpr=1.3&pid=3.1&rm=2",
+      "descripcion": ""
+    },
+    {
+      "id": 1781772918230,
+      "nombre": "Platja Vilanova",
+      "ubicacion": "Vilanova i la geltrú",
+      "tipo": "Playa",
+      "provincia": "Tarragona",
+      "imagen": "https://th.bing.com/th/id/OIP.czCAtqbvEHLnV5x1MvBxIgHaFj?w=241&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+      "descripcion": ""
     }
   ]
 }
