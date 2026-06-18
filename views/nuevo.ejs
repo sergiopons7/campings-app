@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Añadir Camping</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            display: flex;
+            background: #f5f7fa;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #1f2d3d;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+        }
+
+        /* CONTENIDO */
+        .content {
+            margin-left: 220px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* FORMULARIO */
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #219150;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>🏕 App</h2>
+    <a href="/">🏕 Campings</a>
+    <a href="/listado">📋 Listado</a>
+    <a href="/mapa">🗺 Mapa</a>
+    <a href="/foro">💬 Foro</a>
+    <a href="/noticias">📰 Noticias</a>
+</div>
+
+<div class="content">
+
+    <div class="form-box">
+        <h1>➕ Añadir camping</h1>
+
+        <form action="/nuevo" method="POST">
+
+            <input type="text" name="nombre" placeholder="Nombre del camping" required>
+
+            <input type="text" name="ubicacion" placeholder="Ubicación" required>
+
+            <!-- ✅ NUEVO CAMPO -->
+            <select name="tipo" required>
+                <option value="">Tipo de camping</option>
+                <option value="Playa">🏖 Playa</option>
+                <option value="Montaña">⛰ Montaña</option>
+            </select>
+
+            <input type="text" name="imagen" placeholder="URL de imagen">
+
+            <input type="text" name="descripcion" placeholder="Descripción">
+
+            <button type="submit">Guardar camping</button>
+
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

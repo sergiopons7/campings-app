@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listado Campings</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            display: flex;
+            background: #f5f7fa;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #1f2d3d;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+        }
+
+        /* CONTENIDO */
+        .content {
+            margin-left: 220px;
+            width: 100%;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        /* BOTÓN AÑADIR */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn-add {
+            background: #27ae60;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-add:hover {
+            background: #219150;
+        }
+
+        /* ITEMS */
+        .item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .item img {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .info h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .info p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn {
+            background: #27ae60;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #219150;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- MENU -->
+<div class="sidebar">
+    <h2>🏕 Menú</h2>
+
+    <a href="/">🏕 Principal</a>
+    <a href="/listado">📋 Listado</a>
+    <a href="/mapa">🗺 Mapa</a>
+    <a href="/foro">💬 Foro</a>
+    <a href="/noticias">📰 Noticias</a>
+</div>
+
+<!-- CONTENIDO -->
+<div class="content">
+
+    <h1>📋 Listado de Campings</h1>
+
+    <!-- BOTON -->
+    <div class="top-bar">
+        <a href="/nuevo" class="btn-add">➕ Añadir camping</a>
+    </div>
+
+    <!-- LISTA -->
+    <% if (campings.length === 0) { %>
+        <p>No hay campings todavía</p>
+    <% } %>
+
+    <% campings.forEach(camping => { %>
+        <div class="item">
+
+            <img src="<%= camping.imagen %>">
+
+            <div class="info">
+                <h2><%= camping.nombre %></h2>
+                <p>📍 <%= camping.ubicacion %></p>
+                <p><%= camping.descripcion %></p>
+            </div>
+
+            <a href="/campings/<%= camping.id %>" class="btn">
+                Ver
+            </a>
+            
+<form action="/borrar-camping/<%= camping.id %>" method="POST" style="margin-left:10px;">
+    <button style="background:red;color:white;border:none;padding:8px 10px;border-radius:5px;cursor:pointer;">
+        ❌
+    </button>
+</form>
+
+
+        </div>
+    <% }) %>
+
+</div>
+
+</body>
+</html>

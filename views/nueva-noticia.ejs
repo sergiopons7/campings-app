@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Añadir noticia</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            display: flex;
+            background: #f5f7fa;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #1f2d3d;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin: 8px 0;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+        }
+
+        /* CONTENIDO */
+        .content {
+            margin-left: 220px;
+            width: 100%;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* FORMULARIO */
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #219150;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- MENU -->
+<div class="sidebar">
+    <h2>🏕 App</h2>
+
+    <a href="/">🏕 Campings</a>
+    <a href="/foro">💬 Foro</a>
+    <a href="/noticias">📰 Noticias</a>
+</div>
+
+<!-- CONTENIDO -->
+<div class="content">
+
+    <div class="form-box">
+        <h1>➕ Añadir noticia</h1>
+
+        <form action="/nueva-noticia" method="POST">
+
+            <input type="text" name="titulo" placeholder="Título (opcional)"><br>
+            
+            <input type="text" name="link" placeholder="Pega la URL de la noticia" required>
+
+            <button type="submit">Guardar noticia</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
